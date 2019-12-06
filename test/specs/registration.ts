@@ -1,8 +1,11 @@
  import faker = require("faker");
- import assert = require("assert");
+//  import assert = require("assert");
+ import * as chai from 'chai'
+const assert = chai.assert;
+const expect = chai.expect;
 
 describe("User", function() {
-    it("can register", function() {
+    it.only("can register", function() {
         browser.url("/create_account");
         const email = faker.internet.email();
 
@@ -18,7 +21,7 @@ describe("User", function() {
         registationBox.$('button[value="Create Account"]').click();
 
         $('#notices').waitForDisplayed();
-        assert($('#notices').getText().includes('Your customer account has been created.'));
+        expect($('#notices').getText()).includes('Your customer account has been created.');
     }
     );
   });
