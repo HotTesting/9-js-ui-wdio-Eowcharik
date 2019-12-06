@@ -1,20 +1,8 @@
 const faker = require('faker');
 const assert = require("assert");
+import { DuckUtils } from '../../pages/duckUtils'
+//ToDo: move away from here
 
-//ToDo: move away from here
-function performSearch(searchRequest) {
-  let searchBlock = $('[data-type="search"]');
-  if(searchRequest){
-    searchBlock.setValue(searchRequest);
-    searchBlock.addValue('Enter');
-  }else{
-    throw new Error("Search Request is empty");
-  }
-}
-//ToDo: move away from here
-function getRelativeUrl() {
-      return browser.getUrl().substr(browser.options.baseUrl.length);
-  }
   
 
 describe("Website", function() {
@@ -45,10 +33,9 @@ describe("Items search", function() {
 });
 
   it("should show results in case multiple items matches", function() {
-    performSearch("Duck");
+    DuckUtils.performSearch("Duck");
     //get search results:
     let searchBlock = $('#box-search-results .products.row.half-gutter');
-    
     let blueDuck = searchBlock.$('a[title="Blue Duck"]');
     let yellowDuck = searchBlock.$('a[title="VIP Yellow Duck"]');
     let redDuck = searchBlock.$('a[title="Red Duck"]');
@@ -63,9 +50,9 @@ describe("Items search", function() {
 
 
   it("should redirect to item page in case only one result matches", function() {
-    performSearch("Yellow");
+    DuckUtils.performSearch("Yellow");
     //check that URL is correct:
-    assert.equal(getRelativeUrl(),"/rubber-ducks-c-1/premium-ducks-c-2/vip-yellow-duck-p-6", 'URL should match');
+    assert.equal(DuckUtils.getRelativeUrl(browser),"/rubber-ducks-c-1/premium-ducks-c-2/vip-yellow-duck-p-6", 'URL should match');
     
     //check that product block is displayed:
     const productBlock = $('#content [data-name="VIP Yellow Duck"]');
@@ -73,7 +60,7 @@ describe("Items search", function() {
   });
 
   it("should redirect to 'no matching results' in case no items matched", function() {
-    performSearch("blabla");
+    DuckUtils.performSearch("blabla");
     const noResults= $('div > em').getText();
     assert.equal(noResults,'No matching results', 'Text should match')
   });
@@ -82,7 +69,7 @@ describe("Items search", function() {
 // Each implemented test gives you 20 points (max total - 40)
 describe("Search results sorting", function() {
   it("correctly arranges items when using 'by price' sorting", function() {
-    performSearch("Duck");
+    DuckUtils.performSearch("Duck");
     //sort by Price: 
       $('#box-search-results a[href*="sort=price"]').waitForDisplayed();
       $('#box-search-results a[href*="sort=price"]').click();
@@ -103,7 +90,7 @@ describe("Search results sorting", function() {
   
 
   it("correctly arranges items when using 'by name' sorting", function() {
-    performSearch("Duck");
+    DuckUtils.performSearch("Duck");
     //sort by Name: 
     $('#box-search-results a[href*="sort=name"]').waitForDisplayed();
     $('#box-search-results a[href*="sort=name"]').click();

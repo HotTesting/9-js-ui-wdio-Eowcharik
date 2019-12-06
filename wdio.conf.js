@@ -22,7 +22,12 @@ exports.config = {
   // NPM script (see https://docs.npmjs.com/cli/run-script) then the current working
   // directory is where your package.json resides, so `wdio` will be called from there.
   //
-  specs: ["./test/specs/**/*.ts"],
+  specs: [
+    // "./test/specs/**/*.ts"
+    // "./test/specs/order.ts"
+    // "test/specs/register.ts"
+    // "test/specs/smoke.ts"
+  ],
   // Patterns to exclude.
   exclude: [
     // 'path/to/excluded/files'

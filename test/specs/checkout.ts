@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import { App } from '../../pages/application'
-// declare const App: any
+
 
 describe('Cart', function () {
     it('can add item', function () {
