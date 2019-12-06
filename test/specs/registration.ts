@@ -5,7 +5,7 @@ const assert = chai.assert;
 const expect = chai.expect;
 
 describe("User", function() {
-    it.only("can register", function() {
+    it("can register", function() {
         browser.url("/create_account");
         const email = faker.internet.email();
 
