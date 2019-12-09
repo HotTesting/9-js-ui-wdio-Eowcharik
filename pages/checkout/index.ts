@@ -1,9 +1,15 @@
 import { BasePage } from '../base';
 import { ShoppingCart } from './components/shoppingCart';
-
+import { Shipping } from './components/shipping'
+import { Payment } from './components/payment'
+import { Summary } from './components/summary'
+ 
 
 export class CheckoutPage extends BasePage {
     shoppingCart: ShoppingCart = new ShoppingCart()
+    shipping: Shipping = new Shipping()
+    payment: Payment = new Payment()
+    summary: Summary = new Summary()
     
     private get noItemsLabel() { return $('.cart.wrapper em') }
 

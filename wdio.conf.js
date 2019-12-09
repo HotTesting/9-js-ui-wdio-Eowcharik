@@ -24,7 +24,7 @@ exports.config = {
   //
   specs: [
     // "./test/specs/**/*.ts"
-    // "./test/specs/order.ts"
+    "./test/specs/order.ts"
     // "test/specs/register.ts"
     // "test/specs/smoke.ts"
   ],

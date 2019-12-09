@@ -24,7 +24,6 @@ describe('Cart', function () {
         expect(App.checkout.shoppingCart.items.length).to.equal(1);
         const productNameInCart = App.checkout.shoppingCart.items[0].getProductName()
         const productPriceInCart = App.checkout.shoppingCart.items[0].getProductPrice()
-
         console.log('productNameInCart', productNameInCart)
         console.log('productPriceInCart', productPriceInCart)
 

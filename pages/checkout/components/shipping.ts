@@ -1,34 +1,23 @@
-// export class Shipping {
-//     private get container(): WebdriverIO.Element {
-//         return $('#box-checkout-cart')
-//     }
+export class Shipping {
+  private get container(): WebdriverIO.Element {
+    return $('div[class="shipping wrapper"]');
+  }
 
-//     public get items(): Item[] {
-//         return this.container.$$('table.items tr.item')
-//         .map(item => {
-//             return new Item(item)
-//         })
-//     }
+  public get price() {
+    const priceBlock = this.container.$(" .price").getText();
 
-//     public getItemByName(name: string): Item {
-//         return this.items.find(item => item.getProductName().includes(name))
-//     }
+    if (priceBlock.includes("No fee")) {
+      return 0;
+    } else {
+      return parseFloat(priceBlock.replace("$", ""));
+    }
+  }
 
-// }
+  public get shippingTitle() {
+    return this.container.$(" .title").getText();
+  }
 
-// class Item {
-//     container
-
-//     constructor(itemContainer) {
-//         this.container = itemContainer
-//     }
-
-//     public getProductName(): string {
-//         return this.container.getAttribute('data-name')
-//     }
-
-//     public getProductPrice(): number {
-//         return parseFloat(this.container.getAttribute('data-price'))
-//     }
-    
-// }
+  public get shippingCountry() {
+    return this.container.$(" .name").getText();
+  }
+}

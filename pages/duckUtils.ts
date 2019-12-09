@@ -9,7 +9,7 @@ export class duckUtils  {
           searchBlock.setValue(searchRequest);
           searchBlock.addValue('Enter');
         }else{
-          throw new Error("Search Request is empty");
+          throw new Error("Search Request is empty or Search Field was not found");
         }
       }
       
