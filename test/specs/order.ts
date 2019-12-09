@@ -21,8 +21,6 @@ const discountedDuck = "rubber-ducks-c-1/blue-duck-p-4";
 // Each implemented test gives you 15 points
 
 describe("Order", function() {
-  beforeEach(function() {});
-
   it("is successful for regular item", function() {
     // Just regular duck without discounts, parameters, or sold out
     App.product.open(regularDuck);
@@ -52,16 +50,24 @@ describe("Order", function() {
     );
 
     const confirmButton = App.checkout.summary.confirmButton;
-    confirmButton.waitForEnabled(3000);
+    confirmButton.waitForEnabled(5000);
     confirmButton.click();
 
-    expect(DuckUtils.getRelativeUrl(browser)).to.be.equal("/order_success");
+    expect(App.orderSuccess.isOrderSuccess()).to.be.true;
+    expect(App.orderSuccess.TotalPrice).is.equal(SummaryFinalPrice);
+    expect(
+      App.orderSuccess.ProductNames[0].getAttribute("data-name")
+    ).to.be.equal(productNameInCart);
   });
 
-  //     it("is successful for discounted item", function() {
-  //         // this duck always has discount 20%
-  //         throw new Error("NOT IMPLEMENTED");
-  //     });
+      it("is successful for discounted item", function() {
+
+
+
+
+
+        
+      });
 
   //     it("is successful for sold out item", function() {
   //         // this duck always sold out
