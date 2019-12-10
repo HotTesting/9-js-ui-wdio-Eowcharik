@@ -1,33 +1,32 @@
-import { expect } from 'chai'
-import { App } from '../../pages/application'
+import { expect } from "chai";
+import { App } from "../../pages/application";
 
+describe("Cart", function() {
+  it("can add item", function() {
+    App.product.open("/rubber-ducks-c-1/red-duck-p-3");
+    App.product.addToCart();
+    App.checkout.open();
+    expect(App.checkout.isItemsInCart()).to.be.true;
+  });
 
-describe('Cart', function () {
-    it('can add item', function () {
-        App.product.open('/rubber-ducks-c-1/red-duck-p-3')
-        App.product.addToCart()
-        App.checkout.open()
-        expect(App.checkout.isItemsInCart()).to.be.true
-    })
+  it("can add correct item", function() {
+    App.product.open("/rubber-ducks-c-1/red-duck-p-3");
+    const productDetails = App.product.getProductDetails();
 
-    it('can add correct item', function () {
-        App.product.open('/rubber-ducks-c-1/red-duck-p-3')
-        const productDetails = App.product.getProductDetails()
-        
-        console.log('$$$$productDetails', productDetails.toString())        
+    console.log("$$$$productDetails", productDetails.toString());
 
-        App.product.addToCart()
+    App.product.addToCart();
 
-        App.checkout.open()
-        expect(App.checkout.isItemsInCart()).to.be.true
+    App.checkout.open();
+    expect(App.checkout.isItemsInCart()).to.be.true;
 
-        expect(App.checkout.shoppingCart.items.length).to.equal(1);
-        const productNameInCart = App.checkout.shoppingCart.items[0].getProductName()
-        const productPriceInCart = App.checkout.shoppingCart.items[0].getProductPrice()
-        console.log('productNameInCart', productNameInCart)
-        console.log('productPriceInCart', productPriceInCart)
+    expect(App.checkout.shoppingCart.items.length).to.equal(1);
+    const productNameInCart = App.checkout.shoppingCart.items[0].getProductName();
+    const productPriceInCart = App.checkout.shoppingCart.items[0].getProductPrice();
+    console.log("productNameInCart", productNameInCart);
+    console.log("productPriceInCart", productPriceInCart);
 
-        expect(productNameInCart).to.equal(productDetails.name)
-        expect(productPriceInCart).to.equal(productDetails.price)
-    })
-})
+    expect(productNameInCart).to.equal(productDetails.name);
+    expect(productPriceInCart).to.equal(productDetails.price);
+  });
+});
