@@ -34,7 +34,11 @@ export class customerInfo extends BasePage {
                 customerCheckout.$('input[name="postcode"]').setValue(faker.address.zipCode("#####"));
     
                     if(createAccount){
+                
                         customerCheckout.$('input[name="create_account"]').click();
+                        customerCheckout.$('input[name="password"]').waitForDisplayed();
+                        customerCheckout.$('input[name="confirmed_password"]').waitForDisplayed();
+
                         customerCheckout.$('input[name="password"]').setValue(email);
                         customerCheckout.$('input[name="confirmed_password"]').setValue(email);
                     }

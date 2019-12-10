@@ -30,5 +30,8 @@ class Item {
     public getProductPrice(): number {
         return parseFloat(this.container.getAttribute('data-price'))
     }
+    public getProductCount(): number {
+        return parseFloat(this.container.getAttribute('data-quantity'))
+    }
     
 }
