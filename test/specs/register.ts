@@ -1,7 +1,7 @@
 import { App } from "../../pages/application";
 import * as chai from "chai";
-const assert = chai.assert;
 const expect = chai.expect;
+
 
 describe("User", function() {
   it("can register", function() {

@@ -24,23 +24,31 @@ export class ProductDetailsPage extends BasePage {
   }
 
   public getProductSizes(): number[] {
-     const values = $$('.form-control [data-price-adjust]');
-     return values
-     .map(item => {
-         return parseFloat(item.getAttribute('data-price-adjust'))
-     })
-  }
-
-  addToCart(size?:number) {
-      if(size){
-          $('select[class="form-control"]').selectByIndex(size);
-      }
-    $('button[name="add_cart_product"]').click();
-    browser.pause(3000);
+    const values = $$(".form-control [data-price-adjust]");
+    return values.map(item => {
+      return parseFloat(item.getAttribute("data-price-adjust"));
+    });
   }
 
   saleBadgePresent() {
     return $('#box-product div[class="sticker sale"]').isDisplayed();
+  }
+
+  addToCart(size?: number) {
+    const currentItemsInCart = this.header.getQuantity();
+    if (size) {
+      $('select[class="form-control"]').selectByIndex(size);
+    }
+    $('button[name="add_cart_product"]').click();
+
+    browser.waitUntil(
+      () => {
+        return this.header.getQuantity() > currentItemsInCart;
+      },
+      null,
+      `Expected items in cart to be changed. 
+  Current items: ${this.header.getQuantity()} items before ${currentItemsInCart}`
+    );
   }
 }
 

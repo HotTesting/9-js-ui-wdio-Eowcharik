@@ -125,8 +125,8 @@ describe("Contact us form", function() {
     ContactBox.$('textarea[name="message"]').setValue(faker.lorem.words(20));
     ContactBox.$('button[value="Send"]').click();
     $("#notices").waitForDisplayed(
-      undefined,
-      undefined,
+      null,
+      null,
       "Alert about success should be displayed"
     );
     assert(
