@@ -2,6 +2,7 @@ import { expect } from "chai";
 import { App } from "../../pages/application";
 import { DuckUtils } from "../../pages/duckUtils";
 import { AssertionError } from "assert";
+import { CustomerInfo } from "../../pages/components/customerInfo";
 
 const regularDuck = "rubber-ducks-c-1/red-duck-p-3";
 const soldOutDuck = "rubber-ducks-c-1/purple-duck-p-5";
@@ -45,8 +46,7 @@ describe("Order", function() {
 
     expect(productNameInCart).to.equal(productDetail.name);
     expect(productPriceInCart).to.equal(productDetail.price);
-    App.customerInfo.fillCustomerInfo(true);
-
+    CustomerInfo.fillCustomerInfo(true);
     const shippingPrice = App.checkout.shipping.price;
     const paymentPrice = App.checkout.payment.price;
     const summarySubtotal = App.checkout.summary.subtotal;
@@ -89,7 +89,7 @@ describe("Order", function() {
 
     expect(productNameInCart).to.equal(productDetail.name);
     expect(productPriceInCart).to.equal(productDetail.price);
-    App.customerInfo.fillCustomerInfo(true);
+    CustomerInfo.fillCustomerInfo(true);
 
     const shippingPrice = App.checkout.shipping.price;
     const paymentPrice = App.checkout.payment.price;
@@ -144,7 +144,7 @@ describe("Order", function() {
 
     expect(productNameInCart).to.equal(productDetail.name);
     expect(productPriceInCart).to.equal(productDetail.price);
-    App.customerInfo.fillCustomerInfo(true);
+    CustomerInfo.fillCustomerInfo(true);
 
     const shippingPrice = App.checkout.shipping.price;
     const paymentPrice = App.checkout.payment.price;
@@ -188,7 +188,7 @@ describe("Order", function() {
     const discountedProductNameInCart = App.checkout.shoppingCart.items[1].getProductName();
     const discountedProductPriceInCart = App.checkout.shoppingCart.items[1].getProductPrice();
 
-    App.customerInfo.fillCustomerInfo(true);
+    CustomerInfo.fillCustomerInfo(true);
 
     const shippingPrice = App.checkout.shipping.price;
     const paymentPrice = App.checkout.payment.price;
@@ -251,8 +251,7 @@ describe("Order", function() {
     expect(productDetail.price + additionalPrice[2]).to.be.equal(
       largeDuckPrice
     );
-
-    App.customerInfo.fillCustomerInfo(true);
+    CustomerInfo.fillCustomerInfo(true);
 
     const shippingPrice = App.checkout.shipping.price;
     const paymentPrice = App.checkout.payment.price;

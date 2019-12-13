@@ -1,11 +1,10 @@
-import { BasePage } from './base';
 import faker = require("faker");
-import { DuckUtils } from './duckUtils'
+import { DuckUtils } from '../duckUtils'
 
 
-export class customerInfo extends BasePage {
+export class customerInfo {
 
-    fillCustomerInfo(createAccount : boolean = true) {
+     fillCustomerInfo(createAccount : boolean = true) {
         const email = faker.internet.email();
             if ( DuckUtils.getRelativeUrl(browser) === '/create_account'){
                 const customerRegistration = $('form[name="customer_form"]');
