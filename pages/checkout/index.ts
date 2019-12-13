@@ -1,34 +1,36 @@
-import { BasePage } from '../base';
-import { ShoppingCart } from './components/shoppingCart';
-import { Shipping } from './components/shipping'
-import { Payment } from './components/payment'
-import { Summary } from './components/summary'
- 
+import { BasePage } from "../base";
+import { ShoppingCart } from "./components/shoppingCart";
+import { Shipping } from "./components/shipping";
+import { Payment } from "./components/payment";
+import { Summary } from "./components/summary";
 
 export class CheckoutPage extends BasePage {
-    shoppingCart: ShoppingCart = new ShoppingCart()
-    shipping: Shipping = new Shipping()
-    payment: Payment = new Payment()
-    summary: Summary = new Summary()
-    
-    private get noItemsLabel() { return $('.cart.wrapper em') }
+	shoppingCart: ShoppingCart = new ShoppingCart();
+	shipping: Shipping = new Shipping();
+	payment: Payment = new Payment();
+	summary: Summary = new Summary();
 
-    open() {
-        super.open('/checkout')
-    }
+	private get noItemsLabel() {
+		return $(".cart.wrapper em");
+	}
 
-    isNoItemsInCart() {
-        if(this.noItemsLabel.isDisplayed()) {
-            return this.noItemsLabel.getText()
-                .includes('There are no items in your cart.')
-        } else {
-            return false
-        }
-    }
+	open() {
+		super.open("/checkout");
+	}
 
-    isItemsInCart() {
-        return !this.isNoItemsInCart()
-    }
+	isNoItemsInCart() {
+		if (this.noItemsLabel.isDisplayed()) {
+			return this.noItemsLabel
+				.getText()
+				.includes("There are no items in your cart.");
+		} else {
+			return false;
+		}
+	}
+
+	isItemsInCart() {
+		return !this.isNoItemsInCart();
+	}
 }
 
-export const Checkout = new CheckoutPage()
+export const Checkout = new CheckoutPage();

@@ -1,13 +1,12 @@
-import { ProductDetails } from './productDetails';
-import { Checkout } from './checkout';
-import { orderSuccess } from './orderSuccess'
+import { ProductDetails } from "./productDetails";
+import { Checkout } from "./checkout";
+import { orderSuccess } from "./orderSuccess";
 
 export class Application {
-    product = ProductDetails
-    checkout = Checkout
-    // customerInfo = CustomerInfo
-    orderSuccess = orderSuccess
-
+	product = ProductDetails;
+	checkout = Checkout;
+	// customerInfo = CustomerInfo
+	orderSuccess = orderSuccess;
 }
 
-export const App: Application = new Application()
+export const App: Application = new Application();
