@@ -1,13 +1,59 @@
 import { expect } from "chai";
 import { App } from "../../pages/application";
-import { DuckUtils } from "../../pages/duckUtils";
-import { AssertionError } from "assert";
 import { CustomerInfo } from "../../pages/components/customerInfo";
 
 const regularDuck = "rubber-ducks-c-1/red-duck-p-3";
 const soldOutDuck = "rubber-ducks-c-1/purple-duck-p-5";
 const discountedDuck = "rubber-ducks-c-1/blue-duck-p-4";
 const vipDuck = "rubber-ducks-c-1/premium-ducks-c-2/vip-yellow-duck-p-6";
+
+
+
+
+function checkoutAndBuy(productNames: string[], totalSum: number) {
+	//open checkout:
+	App.checkout.open();
+	expect(App.checkout.isItemsInCart()).to.be.true;
+	expect(App.checkout.shoppingCart.items.length).to.equal(productNames.length);
+	CustomerInfo.fillCustomerInfo(true);
+	const shippingPrice = App.checkout.shipping.price;
+	const paymentPrice = App.checkout.payment.price;
+	const summarySubtotal = App.checkout.summary.subtotal;
+	const SummaryPayment = App.checkout.summary.payment;
+	const SummaryFinalPrice = App.checkout.summary.paymentDue;
+
+	//get total price of all ducks:
+	let totalPriceOfProductsInTable = 0;
+	App.checkout.shoppingCart.items.forEach(element => {
+		totalPriceOfProductsInTable =
+			totalPriceOfProductsInTable +
+			element.getProductPrice() * element.getProductCount();
+	});
+
+	//check all prices:
+	expect(totalSum).to.be.equal(totalPriceOfProductsInTable);
+	expect(totalPriceOfProductsInTable).to.equal(summarySubtotal);
+	expect(shippingPrice + paymentPrice).to.equal(SummaryPayment);
+	expect(totalPriceOfProductsInTable + shippingPrice + paymentPrice).to.equal(
+		SummaryFinalPrice
+	);
+
+	//confrm order:
+	const confirmButton = App.checkout.summary.confirmButton;
+	confirmButton.waitForEnabled(5000);
+	confirmButton.click();
+
+	//order success page test:
+	expect(App.orderSuccess.isOrderSuccess()).to.be.true;
+	expect(App.orderSuccess.TotalPrice).is.equal(SummaryFinalPrice);
+	expect(App.orderSuccess.ProductNames.length).is.equal(productNames.length);
+
+	App.orderSuccess.ProductNames.forEach(element => {
+		let product = element.getAttribute("data-name");
+		expect(productNames.indexOf(product)).to.not.equal(-1);
+	});
+}
+
 
 /*
  - verify prices in cart, and after order created
@@ -36,38 +82,11 @@ describe("Order", function() {
 		// Just regular duck without discounts, parameters, or sold out
 		App.product.open(regularDuck);
 		const productDetail = App.product.getProductDetails();
-
 		App.product.addToCart();
-		App.checkout.open();
-		expect(App.checkout.isItemsInCart()).to.be.true;
-		expect(App.checkout.shoppingCart.items.length).to.equal(1);
-		const productNameInCart = App.checkout.shoppingCart.items[0].getProductName();
-		const productPriceInCart = App.checkout.shoppingCart.items[0].getProductPrice();
 
-		expect(productNameInCart).to.equal(productDetail.name);
-		expect(productPriceInCart).to.equal(productDetail.price);
-		CustomerInfo.fillCustomerInfo(true);
-		const shippingPrice = App.checkout.shipping.price;
-		const paymentPrice = App.checkout.payment.price;
-		const summarySubtotal = App.checkout.summary.subtotal;
-		const SummaryPayment = App.checkout.summary.payment;
-		const SummaryFinalPrice = App.checkout.summary.paymentDue;
-
-		expect(productPriceInCart).to.equal(summarySubtotal);
-		expect(shippingPrice + paymentPrice).to.equal(SummaryPayment);
-		expect(productPriceInCart + shippingPrice + paymentPrice).to.equal(
-			SummaryFinalPrice
-		);
-
-		const confirmButton = App.checkout.summary.confirmButton;
-		confirmButton.waitForEnabled(5000);
-		confirmButton.click();
-
-		expect(App.orderSuccess.isOrderSuccess()).to.be.true;
-		expect(App.orderSuccess.TotalPrice).is.equal(SummaryFinalPrice);
-		expect(
-			App.orderSuccess.ProductNames[0].getAttribute("data-name")
-		).to.be.equal(productNameInCart);
+		const products = [productDetail.name];
+		const totalSum = productDetail.price;
+		checkoutAndBuy(products, totalSum);
 	});
 
 	it("is successful for discounted item", function() {
@@ -77,54 +96,22 @@ describe("Order", function() {
 		expect(App.product.saleBadgePresent()).to.be.true;
 
 		App.product.addToCart();
-		App.checkout.open();
-		expect(App.checkout.isItemsInCart()).to.be.true;
-		expect(App.checkout.shoppingCart.items.length).to.equal(1);
-		const productNameInCart = App.checkout.shoppingCart.items[0].getProductName();
-		const productPriceInCart = App.checkout.shoppingCart.items[0].getProductPrice();
 
-		expect(productDetail.priceWithoutDiscount).to.be.not.equal(
-			productDetail.price
-		);
-
-		expect(productNameInCart).to.equal(productDetail.name);
-		expect(productPriceInCart).to.equal(productDetail.price);
-		CustomerInfo.fillCustomerInfo(true);
-
-		const shippingPrice = App.checkout.shipping.price;
-		const paymentPrice = App.checkout.payment.price;
-		const summarySubtotal = App.checkout.summary.subtotal;
-		const SummaryPayment = App.checkout.summary.payment;
-		const SummaryFinalPrice = App.checkout.summary.paymentDue;
-
-		expect(productPriceInCart).to.equal(summarySubtotal);
-		expect(shippingPrice + paymentPrice).to.equal(SummaryPayment);
-		expect(productPriceInCart + shippingPrice + paymentPrice).to.equal(
-			SummaryFinalPrice
-		);
-
-		const confirmButton = App.checkout.summary.confirmButton;
-		confirmButton.waitForEnabled(5000);
-		confirmButton.click();
-
-		expect(App.orderSuccess.isOrderSuccess()).to.be.true;
-		expect(App.orderSuccess.TotalPrice).is.equal(SummaryFinalPrice);
-		expect(
-			App.orderSuccess.ProductNames[0].getAttribute("data-name")
-		).to.be.equal(productNameInCart);
+		const products = [productDetail.name];
+		const totalSum = productDetail.price;
+		checkoutAndBuy(products, totalSum);
 	});
 
-	it.skip("is successful for sold out item", function() {
+	it("is successful for sold out item", function() {
 		// now can be added to cart and bought successfully
 		// this duck always sold out
 		App.product.open(soldOutDuck);
 		const productDetail = App.product.getProductDetails();
+		App.product.addToCart();
 
-		try {
-			App.product.addToCart();
-		} catch (error) {
-			expect(error).contains("Button 'Add to Cart' is not displayed");
-		}
+		const products = [productDetail.name];
+		const totalSum = productDetail.price;
+		checkoutAndBuy(products, totalSum);
 	});
 
 	it("is successful for 2 same items in card", function() {
@@ -135,90 +122,25 @@ describe("Order", function() {
 		App.product.addToCart();
 		App.product.addToCart();
 
-		App.checkout.open();
-		expect(App.checkout.isItemsInCart()).to.be.true;
-		expect(App.checkout.shoppingCart.items.length).to.equal(1);
-		const productNameInCart = App.checkout.shoppingCart.items[0].getProductName();
-		const productPriceInCart = App.checkout.shoppingCart.items[0].getProductPrice();
-		const productCountInCart = App.checkout.shoppingCart.items[0].getProductCount();
-
-		expect(productNameInCart).to.equal(productDetail.name);
-		expect(productPriceInCart).to.equal(productDetail.price);
-		CustomerInfo.fillCustomerInfo(true);
-
-		const shippingPrice = App.checkout.shipping.price;
-		const paymentPrice = App.checkout.payment.price;
-		const summarySubtotal = App.checkout.summary.subtotal;
-		const SummaryPayment = App.checkout.summary.payment;
-		const SummaryFinalPrice = App.checkout.summary.paymentDue;
-
-		expect(productPriceInCart * productCountInCart).to.equal(summarySubtotal);
-		expect(shippingPrice + paymentPrice).to.equal(SummaryPayment);
-		expect(
-			productPriceInCart * productCountInCart + shippingPrice + paymentPrice
-		).to.equal(SummaryFinalPrice);
-
-		const confirmButton = App.checkout.summary.confirmButton;
-		confirmButton.waitForEnabled(5000);
-		confirmButton.click();
-
-		expect(App.orderSuccess.isOrderSuccess()).to.be.true;
-		expect(App.orderSuccess.TotalPrice).is.equal(SummaryFinalPrice);
-		expect(
-			App.orderSuccess.ProductNames[0].getAttribute("data-name")
-		).to.be.equal(productNameInCart);
+		const products = [productDetail.name];
+		const totalSum = productDetail.price * 2;
+		checkoutAndBuy(products, totalSum);
 	});
 
 	it("is successful for 2 different items in card", function() {
 		App.product.open(regularDuck);
+		const productDetailFirst = App.product.getProductDetails();
 		App.product.addToCart();
 
 		App.product.open(discountedDuck);
+		const productDetailSecond = App.product.getProductDetails();
 		expect(App.product.saleBadgePresent()).to.be.true;
 		App.product.addToCart();
-		//open checkout:
-		App.checkout.open();
-		expect(App.checkout.isItemsInCart()).to.be.true;
-		expect(App.checkout.shoppingCart.items.length).to.equal(2);
 
-		//get data for first duck:
-		const regularProductNameInCart = App.checkout.shoppingCart.items[0].getProductName();
-		const regularProductPriceInCart = App.checkout.shoppingCart.items[0].getProductPrice();
-		//get data for second duck:
-		const discountedProductNameInCart = App.checkout.shoppingCart.items[1].getProductName();
-		const discountedProductPriceInCart = App.checkout.shoppingCart.items[1].getProductPrice();
+		const products = [productDetailFirst.name, productDetailSecond.name];
+		const totalSum = productDetailFirst.price + productDetailSecond.price;
 
-		CustomerInfo.fillCustomerInfo(true);
-
-		const shippingPrice = App.checkout.shipping.price;
-		const paymentPrice = App.checkout.payment.price;
-		const summarySubtotal = App.checkout.summary.subtotal;
-		const SummaryPayment = App.checkout.summary.payment;
-		const SummaryFinalPrice = App.checkout.summary.paymentDue;
-
-		expect(regularProductPriceInCart + discountedProductPriceInCart).to.equal(
-			summarySubtotal
-		);
-		expect(shippingPrice + paymentPrice).to.equal(SummaryPayment);
-		expect(
-			regularProductPriceInCart +
-				discountedProductPriceInCart +
-				shippingPrice +
-				paymentPrice
-		).to.equal(SummaryFinalPrice);
-
-		const confirmButton = App.checkout.summary.confirmButton;
-		confirmButton.waitForEnabled(5000);
-		confirmButton.click();
-
-		expect(App.orderSuccess.isOrderSuccess()).to.be.true;
-		expect(App.orderSuccess.TotalPrice).is.equal(SummaryFinalPrice);
-		expect(
-			App.orderSuccess.ProductNames[0].getAttribute("data-name")
-		).to.be.equal(regularProductNameInCart);
-		expect(
-			App.orderSuccess.ProductNames[1].getAttribute("data-name")
-		).to.be.equal(discountedProductNameInCart);
+		checkoutAndBuy(products, totalSum);
 	});
 
 	it("is successful for items with parameters", function() {
@@ -227,59 +149,19 @@ describe("Order", function() {
 		App.product.open(vipDuck);
 		const additionalPrice = App.product.getProductSizes();
 		const productDetail = App.product.getProductDetails();
-
 		App.product.addToCart(1);
 		App.product.addToCart(2);
 		App.product.addToCart(3);
-
-		//open checkout:
-		App.checkout.open();
-		expect(App.checkout.isItemsInCart()).to.be.true;
-		expect(App.checkout.shoppingCart.items.length).to.equal(3);
-
-		//get prices of all ducks:
-		const smallDuckPrice = App.checkout.shoppingCart.items[0].getProductPrice();
-		const mediumDuckPrice = App.checkout.shoppingCart.items[1].getProductPrice();
-		const largeDuckPrice = App.checkout.shoppingCart.items[2].getProductPrice();
-
-		expect(productDetail.price + additionalPrice[0]).to.be.equal(
-			smallDuckPrice
-		);
-		expect(productDetail.price + additionalPrice[1]).to.be.equal(
-			mediumDuckPrice
-		);
-		expect(productDetail.price + additionalPrice[2]).to.be.equal(
-			largeDuckPrice
-		);
-		CustomerInfo.fillCustomerInfo(true);
-
-		const shippingPrice = App.checkout.shipping.price;
-		const paymentPrice = App.checkout.payment.price;
-		const summarySubtotal = App.checkout.summary.subtotal;
-		const SummaryPayment = App.checkout.summary.payment;
-		const SummaryFinalPrice = App.checkout.summary.paymentDue;
-
-		expect(smallDuckPrice + mediumDuckPrice + largeDuckPrice).to.equal(
-			summarySubtotal
-		);
-		expect(shippingPrice + paymentPrice).to.equal(SummaryPayment);
-		expect(
-			smallDuckPrice +
-				mediumDuckPrice +
-				largeDuckPrice +
-				shippingPrice +
-				paymentPrice
-		).to.equal(SummaryFinalPrice);
-
-		const confirmButton = App.checkout.summary.confirmButton;
-		confirmButton.waitForEnabled(5000);
-		confirmButton.click();
-
-		expect(App.orderSuccess.isOrderSuccess()).to.be.true;
-		expect(App.orderSuccess.TotalPrice).is.equal(SummaryFinalPrice);
-
-		App.orderSuccess.ProductNames.forEach(element => {
-			expect(element.getAttribute("data-name")).to.be.equal(productDetail.name);
+		const products = [
+			productDetail.name,
+			productDetail.name,
+			productDetail.name
+		];
+		let additionalPrices = 0;
+		additionalPrice.forEach(price => {
+			additionalPrices = additionalPrices + price;
 		});
+		const totalSum = productDetail.price * 3 + additionalPrices;
+		checkoutAndBuy(products, totalSum);
 	});
 });

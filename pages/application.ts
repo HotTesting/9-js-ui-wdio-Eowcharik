@@ -5,7 +5,6 @@ import { orderSuccess } from "./orderSuccess";
 export class Application {
 	product = ProductDetails;
 	checkout = Checkout;
-	// customerInfo = CustomerInfo
 	orderSuccess = orderSuccess;
 }
 

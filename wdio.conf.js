@@ -6,22 +6,19 @@ exports.config = {
 	path: "/",
 	specs: [
 		"./test/specs/**/*.ts"
-		// "./test/specs/order.ts"
-		// "test/specs/register.ts"
-		// "test/specs/smoke.ts"
 	],
 
-	maxInstances: 10,
+	maxInstances: 20,
 	capabilities: [
 		{
-			maxInstances: 5,
+			maxInstances: 2,
 			browserName: "chrome"
 		}
 	],
 	// Level of logging verbosity: trace | debug | info | warn | error | silent
 	logLevel: "warn",
 	bail: 0,
-	baseUrl: "http://ip-5236.sunline.net.ua:38015",
+	baseUrl: process.env.SUT_URL || "http://ip-5236.sunline.net.ua:38015",
 	waitforTimeout: 10000,
 	connectionRetryTimeout: 90000,
 	connectionRetryCount: 3,

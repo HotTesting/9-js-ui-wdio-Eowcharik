@@ -37,8 +37,19 @@ export class ProductDetailsPage extends BasePage {
 	addToCart(size?: number) {
 		const currentItemsInCart = this.header.getQuantity();
 		if (size) {
+			let selectedValue = $('select[class="form-control"]').getValue();
 			$('select[class="form-control"]').selectByIndex(size);
+			browser.waitUntil(
+				() => {
+					return selectedValue !== $('select[class="form-control"]').getValue();
+				},
+				null,
+				`Expected size is changed. Current size: ${$(
+					'select[class="form-control"]'
+				).getValue()} size before ${selectedValue}`
+			);
 		}
+
 		$('button[name="add_cart_product"]').click();
 
 		browser.waitUntil(

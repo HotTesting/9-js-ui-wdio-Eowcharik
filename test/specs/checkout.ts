@@ -21,8 +21,6 @@ describe("Cart", function() {
 		App.product.open("/rubber-ducks-c-1/red-duck-p-3");
 		const productDetails = App.product.getProductDetails();
 
-		console.log("$$$$productDetails", productDetails.toString());
-
 		App.product.addToCart();
 
 		App.checkout.open();
@@ -31,9 +29,6 @@ describe("Cart", function() {
 		expect(App.checkout.shoppingCart.items.length).to.equal(1);
 		const productNameInCart = App.checkout.shoppingCart.items[0].getProductName();
 		const productPriceInCart = App.checkout.shoppingCart.items[0].getProductPrice();
-		console.log("productNameInCart", productNameInCart);
-		console.log("productPriceInCart", productPriceInCart);
-
 		expect(productNameInCart).to.equal(productDetails.name);
 		expect(productPriceInCart).to.equal(productDetails.price);
 	});
