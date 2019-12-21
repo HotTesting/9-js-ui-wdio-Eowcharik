@@ -27,4 +27,12 @@ export class Summary {
 	public get confirmButton() {
 		return this.container.$('  button[name="confirm_order"]');
 	}
+
+
+	public confirmOrder() {
+	const confirmButton = this.confirmButton;
+	confirmButton.waitForEnabled(5000);
+	confirmButton.click();
+		
+	}
 }

@@ -1,21 +1,18 @@
 import { expect } from "chai";
 import { App } from "../../pages/application";
-import { CustomerInfo } from "../../pages/components/customerInfo";
+import { Checkout } from "../../pages/checkout";
 
 const regularDuck = "rubber-ducks-c-1/red-duck-p-3";
 const soldOutDuck = "rubber-ducks-c-1/purple-duck-p-5";
 const discountedDuck = "rubber-ducks-c-1/blue-duck-p-4";
 const vipDuck = "rubber-ducks-c-1/premium-ducks-c-2/vip-yellow-duck-p-6";
 
-
-
-
 function checkoutAndBuy(productNames: string[], totalSum: number) {
 	//open checkout:
 	App.checkout.open();
 	expect(App.checkout.isItemsInCart()).to.be.true;
 	expect(App.checkout.shoppingCart.items.length).to.equal(productNames.length);
-	CustomerInfo.fillCustomerInfo(true);
+	Checkout.customerInfo.fill();
 	const shippingPrice = App.checkout.shipping.price;
 	const paymentPrice = App.checkout.payment.price;
 	const summarySubtotal = App.checkout.summary.subtotal;
@@ -39,9 +36,7 @@ function checkoutAndBuy(productNames: string[], totalSum: number) {
 	);
 
 	//confrm order:
-	const confirmButton = App.checkout.summary.confirmButton;
-	confirmButton.waitForEnabled(5000);
-	confirmButton.click();
+	App.checkout.summary.confirmOrder();
 
 	//order success page test:
 	expect(App.orderSuccess.isOrderSuccess()).to.be.true;
@@ -53,7 +48,6 @@ function checkoutAndBuy(productNames: string[], totalSum: number) {
 		expect(productNames.indexOf(product)).to.not.equal(-1);
 	});
 }
-
 
 /*
  - verify prices in cart, and after order created
@@ -71,10 +65,6 @@ function checkoutAndBuy(productNames: string[], totalSum: number) {
 
 describe("Order", function() {
 	beforeEach(function() {
-		browser.deleteCookies();
-	});
-
-	afterEach(function() {
 		browser.deleteCookies();
 	});
 

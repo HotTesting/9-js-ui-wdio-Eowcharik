@@ -1,13 +1,13 @@
 import { App } from "../../pages/application";
 import * as chai from "chai";
-import { CustomerInfo } from "../../pages/components/customerInfo";
+import { registration } from "../../pages/registration";
 
 const expect = chai.expect;
 
 describe("User", function() {
 	it("can register", function() {
 		App.product.open("/create_account");
-		CustomerInfo.fillCustomerInfo(true);
+		registration.fillCustomerInfo();
 		$("#notices").waitForDisplayed();
 		expect($("#notices").getText()).includes(
 			"Your customer account has been created."

@@ -5,9 +5,9 @@ exports.config = {
 	// Override default path ('/wd/hub') for chromedriver service.
 	path: "/",
 	specs: [
-		"./test/specs/**/*.ts"
+		// "./test/specs/**/*.ts"
+		"test/specs/order.ts"
 	],
-
 	maxInstances: 20,
 	capabilities: [
 		{
@@ -29,7 +29,7 @@ exports.config = {
 		ui: "bdd",
 		timeout: 60000
 	},
-	beforeTest: function(test, context) {
+	beforeTest: function() {
 		browser.setTimeout({ implicit: 500 });
 	}
 };
